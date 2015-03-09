@@ -1,0 +1,30 @@
+##
+## Need at least a data set input parameter.
+##
+if [ -z "$1" ]; then
+   echo "`basename $0` bad usage.  Must provide input parameter."
+   exit 1
+fi
+
+export DATA_SET="$1"
+
+MY_DIR=`dirname $0`
+export TOOL_HOME=`readlink -e $MY_DIR`
+export TOOL_LIBS=${TOOL_HOME}/lib
+export COMET_LIBS=${TOOL_LIBS}
+export TOOL_CONFIG=${TOOL_HOME}/config
+export TOOL_LOGS=${TOOL_HOME}/logs
+export COMET_LOGS=${TOOL_LOGS}
+
+export CALL_SOURCE=Sykes
+
+export BASE_DATA_FOLDER=`readlink -e ../TestData/${CALL_SOURCE}Data`
+export DATA_FOLDER=${BASE_DATA_FOLDER}/${DATA_SET}
+
+export HCP_DNS_NAME=hcp700.clgdomain.local
+export HCP_TENANT_NAME=prudential
+export HCP_NAMESPACE_NAME=nice
+
+export HCP_USER=appuser
+export HCP_ENC_PWD=d0dfae70ecee372035ff17df7904ca65
+

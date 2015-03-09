@@ -1,0 +1,8 @@
+#!/bin/bash
+
+CLASSPATH=`dirname $0`/lib/Prudential.jar
+export CLASSPATH
+
+DEFINES=
+
+java ${DEFINES} com.prudential.tools.GetWAVDuration $*

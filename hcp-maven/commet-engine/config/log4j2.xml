@@ -1,0 +1,13 @@
+<Configuration status="ERROR">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${env:PLAYENVVAR} [%t] : %-5level %logger{36} - %m%n"></PatternLayout></Console>
+		<RollingFile name="LogFiles" fileName="${env:COMET_LOGS}/CometPhase${env:RUN_PHASE}_${env:DATA_SET_NAME}.log" filePattern="${env:COMET_LOGS}/${date:yyyy-MM}/CometPhase${env:RUN_PHASE}_${env:DATA_SET_NAME}-%d{MM-dd-yyy}-%i.log.gz"><PatternLayout pattern=" [%t] : %d %-5level %logger{36} - %m%n"></PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="500 MB"></SizeBasedTriggeringPolicy>
+				<OnStartupTriggeringPolicy></OnStartupTriggeringPolicy></Policies>
+			<DefaultRolloverStrategy max="20" fileIndex="max"></DefaultRolloverStrategy></RollingFile></Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console"></AppenderRef>
+			<AppenderRef ref="LogFiles"></AppenderRef></Root></Loggers></Configuration>

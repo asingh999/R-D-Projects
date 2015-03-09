@@ -1,0 +1,13 @@
+<Configuration status="ERROR">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%t] : %-5level %logger{36} - %m%n"></PatternLayout></Console>
+		<RollingFile name="LogFiles" fileName="${env:COMET_LOGS}/PrudentialCallIngest_${env:CALL_SOURCE}.log" filePattern="${env:COMET_LOGS}/${date:yyyy-MM}/PrudentialComet_${env:CALL_SOURCE}-%d{MM-dd-yyy}-%i.log.gz"><PatternLayout pattern="%d [%t] %-5level %logger{36} - %m%n"></PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="500 MB"></SizeBasedTriggeringPolicy>
+				<OnStartupTriggeringPolicy></OnStartupTriggeringPolicy></Policies>
+			<DefaultRolloverStrategy max="20" fileIndex="max"></DefaultRolloverStrategy></RollingFile></Appenders>
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="Console"></AppenderRef>
+			<AppenderRef ref="LogFiles"></AppenderRef></Root></Loggers></Configuration>

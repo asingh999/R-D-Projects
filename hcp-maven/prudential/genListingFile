@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+  echo
+  echo "This tool generates listing file used for CMX/Alliance Calls"
+  echo
+  echo "Usage `basename $0` <Data-Set-Name>"
+  echo "   where,"
+  echo "     <Data-Set-Name> is InboundCalls or OutboundCalls"
+  echo
+
+  exit 1
+fi
+
+. `dirname $0`/config/envsetup_CMX $1
+
+if [ ! -d "${DATA_FOLDER}" ]; then
+   echo "ERROR: Data Folder for <Data-Set-Name> is not found."
+   echo "    ${DATA_FOLDER}"
+   echo
+
+   exit 1
+fi
+
+CLASSPATH=${TOOL_LIBS}/Prudential.jar
+export CLASSPATH
+
+DEFINES=
+
+java ${DEFINES} com.prudential.tools.MDConverter ${DATA_FOLDER}/${DATA_SET}.XML

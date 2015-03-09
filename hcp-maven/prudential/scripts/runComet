@@ -1,0 +1,56 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]; then
+  echo "ERROR: Invalid number of input parameters."
+  echo
+  echo "Usage `basename $0` <Call-Source-Name> <Data-Set-Name>"
+  echo "   where,"
+  echo "     <Call-Source-Name> is 'CMX' or 'Sykes'"
+  echo "     <Data-Set-Name> is "
+  echo "         for CMX: 'InboundCalls' or 'OutboundCalls'"
+  echo "         for Sykes: 'NICECalls'"
+  echo
+
+  exit 1
+fi
+
+# Make sure the first parameter is correct.
+if [ "$1" != "CMX" -a "$1" != "Sykes" ]; then
+   echo "ERROR: Invalid <Call-Source-Name> specified on command line."
+   echo "    $1"
+   echo
+
+   exit 1
+fi
+
+. `dirname $0`/config/envsetup_$1 $2
+
+if [ ! -d "${DATA_FOLDER}" ]; then
+   echo "ERROR: Data Folder for <Data-Set-Name> is not found."
+   echo "    ${DATA_FOLDER}"
+   echo
+
+   exit 1
+fi
+
+if [ ! -z "${LISTING_FILE}" -a ! -f "${LISTING_FILE}" ]; then
+   echo "ERROR: Listing file is not found."
+   echo "    ${LISTING_FILE}"
+   echo
+   exit 1
+fi
+
+# This constant defines the class path entries for the custom modules that will
+#   do the metadata processing. This line must be modified in order to pick up
+#   the java entry points to these modules.
+CUSTOM_MODULES=${TOOL_LIBS}/Prudential.jar
+
+CLASSPATH=${COMET_LIBS}/COMET.jar:${COMET_LIBS}/HCPAPIHelpers.jar
+CLASSPATH=${CLASSPATH}:${COMET_LIBS}/httpcore-4.2.4.jar:${COMET_LIBS}/httpclient-4.2.5.jar:${COMET_LIBS}/commons-codec-1.6.jar:${COMET_LIBS}/commons-logging-1.1.1.jar
+CLASSPATH=${CLASSPATH}:${COMET_LIBS}/log4j-api-2.0.2.jar:${COMET_LIBS}/log4j-core-2.0.2.jar
+CLASSPATH=${CLASSPATH}:${CUSTOM_MODULES}
+export CLASSPATH
+
+DEFINES="-Dlog4j.configurationFile=${TOOL_CONFIG}/log4j2.xml -Dcom.hds.hcp.tools.comet.properties.file=${TOOL_CONFIG}/comet_${CALL_SOURCE}.properties -Dcom.prudential.properties.file=${TOOL_CONFIG}/prudential_${CALL_SOURCE}.properties -Dcom.hds.hcp.tools.comet.scanner.properties.file=${TOOL_CONFIG}/scanner_${CALL_SOURCE}.properties"
+
+java ${DEFINES} com.hds.hcp.tools.comet.CometMain 
